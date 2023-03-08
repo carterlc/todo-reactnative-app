@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   FlatList,
@@ -17,6 +17,7 @@ import {
   Text,
   TextInput,
   useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -52,7 +53,7 @@ function App() {
     console.log(todos);
   }, [todos]);
 
-  render() {
+
     return (
       // form
       <FlatList onSubmitEditing={handleSubmit}>
@@ -61,7 +62,7 @@ function App() {
         <TextInput value={newTodo} onChange={(event) => setNewTodo(event.target.value)}></TextInput>
 
         {/* button */}
-        <TouchableOpacity onPress={somethinghere}>
+        <TouchableOpacity>
           <Text>Add to do</Text>
         </TouchableOpacity>
         
@@ -69,11 +70,11 @@ function App() {
         <View>
           
           
-          // li
-          <Input key={todo.id} checked={todo.completed} onChange={() => handleDeleteTodo(todo.id)}>
-          </Input>
+          {/* // li */}
+          <Text checked={todo.completed} onChange={() => handleDeleteTodo(todo.id)}>
+          </Text>
 
-          // Span
+          {/* // Span */}
           <Text style={{ textDecoration: todo.completed ? "line-through" : "none"}}>
           {todo.text}
           </Text>
@@ -86,7 +87,7 @@ function App() {
 
       </FlatList >
     );
-}
+
 }
 
 
