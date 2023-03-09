@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   FlatList,
@@ -19,11 +19,13 @@ import {
   useColorScheme,
   TouchableOpacity,
   View,
+  Button,
+  ListHeaderComponent,
 } from 'react-native';
 
 function App() {
-
-  const [todos, setTodos] = useState([]);
+const testTodo = {id:29, text:'hello', completed:false}
+  const [todos, setTodos] = useState([testTodo]);
   const [newTodo, setNewTodo] = useState("");
 
   const handleSubmit = (event) => {
@@ -53,40 +55,30 @@ function App() {
     console.log(todos);
   }, [todos]);
 
-
+  const Header = (props) => {
     return (
-      // form
-      <FlatList onSubmitEditing={handleSubmit}>
-        
-        {/* textfield */}
+      <View>
+        <Text>Todo:</Text>
         <TextInput value={newTodo} onChange={(event) => setNewTodo(event.target.value)}></TextInput>
-
-        {/* button */}
-        <TouchableOpacity>
-          <Text>Add to do</Text>
-        </TouchableOpacity>
-        
-        {/* ul */}
-        <View>
-          
-          
-          {/* // li */}
-          <Text checked={todo.completed} onChange={() => handleDeleteTodo(todo.id)}>
-          </Text>
-
-          {/* // Span */}
-          <Text style={{ textDecoration: todo.completed ? "line-through" : "none"}}>
-          {todo.text}
-          </Text>
-          
-          {/* second button here */ }
-          < TouchableOpacity onPress = {() => handleDeletedTodo(todo.id)}>
-          <Text>Delete</Text>
-          </TouchableOpacity>
-        </View>
-
-      </FlatList >
+        <Button title='Submit' />
+      </View>
     );
+  };
+
+  return (
+
+    <FlatList ListHeaderComponent={<Header />}>
+      {todos.map((todo) => {
+        return (
+          <View key={todo.id}>
+          <Text>Hello</Text>
+          <Button title='complete' onPress={() => handleToggleCompleted(todo.id)} />
+          <Button onPress={() => handleDeleteTodo(todo.id)} title='Delete'/>
+          </View>
+          );
+        })}
+    </FlatList >
+  );
 
 }
 
