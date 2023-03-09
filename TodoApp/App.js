@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Button } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -23,6 +23,7 @@ const App = () => {
     const color = item.id === selectedId ? 'white' : 'black';
 
     return (
+
       <Item
         key={item.id}
         item={item}
@@ -30,6 +31,7 @@ const App = () => {
         backgroundColor={backgroundColor}
         textColor={color}
       />
+
     );
   };
 
@@ -43,6 +45,11 @@ const App = () => {
     setTodos([...todos, { id: Date.now(), text: newText, completed: false }]);
   };
 
+  const handleDeleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+    console.log();
+  };
+
   const Header = (props) => {
     return (
       <>
@@ -50,7 +57,12 @@ const App = () => {
           <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => newText = text} />
           <TouchableOpacity onPress={addTodo}>
             <View style={styles.addWrapper}>
-              <Text style={styles.plusIcon}>+</Text>
+              <Text style={styles.icon}>+</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.addWrapper}>
+              <Text style={styles.icon}>-</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -66,6 +78,7 @@ const App = () => {
           keyExtractor={item => item.id}
           extraData={selectedId}
           ListHeaderComponent={Header}
+          
         />
       </SafeAreaView>
   );
@@ -99,7 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
   },
-  plusIcon: {
+  icon: {
     fontSize: 20,
   },
   searchBar: {
