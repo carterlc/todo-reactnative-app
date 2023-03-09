@@ -1,87 +1,120 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React, { useState, useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
-  useColorScheme,
   TouchableOpacity,
+  TextInput,
   View,
-  Button,
-  ListHeaderComponent,
 } from 'react-native';
 
-function App() {
-const testTodo = {id:29, text:'hello', completed:false}
-  const [todos, setTodos] = useState([testTodo]);
-  const [newTodo, setNewTodo] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
-    setNewTodo("");
-  };
+const App = () => {
+  const testTodo = { id: 29, text: 'hello', completed: false };
+  const testTodo2 = { id: 2, text: 'bye', completed: false };
 
-  const handleToggleCompleted = (id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, completed: !todo.completed };
-        } else {
-          return todo;
-        }
-      })
+  const [todos, setTodos] = React.useState([testTodo, testTodo2]);
+  const [newTodo, setNewTodo] = React.useState("");
+
+  const [selectedId, setSelectedId] = useState();
+
+  const renderItem = ({ item }) => {
+    const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
+    const color = item.id === selectedId ? 'white' : 'black';
+
+    return (
+      <Item
+        key={item.id}
+        item={item}
+        onPress={() => setSelectedId(item.id)}
+        // backgroundColor={backgroundColor}
+        // textColor={color}
+      />
     );
   };
 
-  const handleDeleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-    console.log();
+  const Item = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity onPress={onPress} style={[styles.item, { backgroundColor }]}>
+      <Text style={[styles.title, { color: textColor }]}>{item.text}</Text>
+    </TouchableOpacity>
+  );
+
+  const addTodo = () => {
+    setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
   };
 
   useEffect(() => {
-    console.log(todos);
-  }, [todos]);
+    console.log(newTodo)
+  },[newTodo]);
+  
 
-  const Header = (props) => {
+  const Footer = (props) => {
     return (
-      <View>
-        <Text>Todo:</Text>
-        <TextInput value={newTodo} onChange={(event) => setNewTodo(event.target.value)}></TextInput>
-        <Button title='Submit' />
-      </View>
-    );
-  };
+      <>
+        <View style={styles.searchBar}>
+          <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => setNewTodo(text)} value={newTodo} />
+          <TouchableOpacity onPress={addTodo}>
+            <View style={styles.addWrapper}>
+              <Text style={styles.plusIcon}>+</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
+  }
 
   return (
-
-    <FlatList ListHeaderComponent={<Header />}>
-      {todos.map((todo) => {
-        return (
-          <View key={todo.id}>
-          <Text>Hello</Text>
-          <Button title='complete' onPress={() => handleToggleCompleted(todo.id)} />
-          <Button onPress={() => handleDeleteTodo(todo.id)} title='Delete'/>
-          </View>
-          );
-        })}
-    </FlatList >
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={todos}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        extraData={selectedId}
+        ListFooterComponent={Footer}
+      />
+    </SafeAreaView >
   );
 
-}
 
+
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  addWrapper: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+  },
+  plusIcon: {
+    fontSize: 20,
+  },
+  searchBar: {
+    display: 'flex',
+  }
+});
 
 export default App;
-
