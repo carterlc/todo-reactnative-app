@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -8,15 +8,13 @@ import {
   TouchableOpacity,
   TextInput,
   View,
+  KeyboardAvoidingView,
 } from 'react-native';
 
-
 const App = () => {
-  const testTodo = { id: 29, text: 'hello', completed: false };
-  const testTodo2 = { id: 2, text: 'bye', completed: false };
 
-  const [todos, setTodos] = React.useState([testTodo, testTodo2]);
-  const [newTodo, setNewTodo] = React.useState("");
+  const [todos, setTodos] = React.useState([]);
+  let newText = "";
 
   const [selectedId, setSelectedId] = useState();
 
@@ -29,8 +27,8 @@ const App = () => {
         key={item.id}
         item={item}
         onPress={() => setSelectedId(item.id)}
-        // backgroundColor={backgroundColor}
-        // textColor={color}
+        backgroundColor={backgroundColor}
+        textColor={color}
       />
     );
   };
@@ -42,19 +40,14 @@ const App = () => {
   );
 
   const addTodo = () => {
-    setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
+    setTodos([...todos, { id: Date.now(), text: newText, completed: false }]);
   };
 
-  useEffect(() => {
-    console.log(newTodo)
-  },[newTodo]);
-  
-
-  const Footer = (props) => {
+  const Header = (props) => {
     return (
       <>
         <View style={styles.searchBar}>
-          <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => setNewTodo(text)} value={newTodo} />
+          <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => newText = text} />
           <TouchableOpacity onPress={addTodo}>
             <View style={styles.addWrapper}>
               <Text style={styles.plusIcon}>+</Text>
@@ -66,19 +59,16 @@ const App = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={todos}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        extraData={selectedId}
-        ListFooterComponent={Footer}
-      />
-    </SafeAreaView >
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={todos}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          extraData={selectedId}
+          ListHeaderComponent={Header}
+        />
+      </SafeAreaView>
   );
-
-
-
 };
 
 const styles = StyleSheet.create({
