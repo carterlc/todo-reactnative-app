@@ -23,15 +23,20 @@ const App = () => {
     const color = item.id === selectedId ? 'white' : 'black';
 
     return (
-
-      <Item
-        key={item.id}
-        item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={backgroundColor}
-        textColor={color}
-      />
-
+      <View>
+        <Item
+          key={item.id}
+          item={item}
+          onPress={() => setSelectedId(item.id)}
+          backgroundColor={backgroundColor}
+          textColor={color}
+        />
+        <TouchableOpacity onPress={handleDeleteTodo(todos.id)}>
+          <View>
+            <Text>Delete</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -50,7 +55,7 @@ const App = () => {
     console.log();
   };
 
-  const Header = (props) => {
+  const Header = () => {
     return (
       <>
         <View style={styles.searchBar}>
@@ -60,27 +65,22 @@ const App = () => {
               <Text style={styles.icon}>+</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.addWrapper}>
-              <Text style={styles.icon}>-</Text>
-            </View>
-          </TouchableOpacity>
         </View>
       </>
     )
   }
 
   return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={todos}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          extraData={selectedId}
-          ListHeaderComponent={Header}
-          
-        />
-      </SafeAreaView>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={todos}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        extraData={selectedId}
+        ListHeaderComponent={Header}
+
+      />
+    </SafeAreaView>
   );
 };
 
