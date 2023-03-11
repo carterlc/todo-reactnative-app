@@ -16,22 +16,40 @@ const App = () => {
   const [todos, setTodos] = React.useState([]);
   let newText = "";
 
-  const [selectedId, setSelectedId] = useState();
+  const [checkedTodo, setCheckedTodo] = useState();
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? '#6e3b6e' : '#f9c2ff';
-    const color = item.id === selectedId ? 'white' : 'black';
+    const backgroundColor = item.completed ? '#6e3b6e' : '#f9c2ff';
+    const color = item.completed ? 'white' : 'black';
+
+    const completeItem = id => {
+      console.log(id);
+      //Loop through the array of todo
+      const updatedTodos = todos.map(todo => {
+        if (todo.id === id) {
+          // find the object that has the id and change
+          // the checked value of the item from true to false
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      });
+      // call setTodos with the new array
+      console.log(updatedTodos);
+      setTodos(updatedTodos);
+    }
+    
 
     return (
       <View>
         <Item
           key={item.id}
           item={item}
-          onPress={() => setSelectedId(item.id)}
+          onPress={() => completeItem(item.id)}
           backgroundColor={backgroundColor}
           textColor={color}
+          
         />
-        <TouchableOpacity onPress={handleDeleteTodo(todos.id)}>
+        <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
           <View>
             <Text>Delete</Text>
           </View>
@@ -57,16 +75,14 @@ const App = () => {
 
   const Header = () => {
     return (
-      <>
-        <View style={styles.searchBar}>
-          <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => newText = text} />
-          <TouchableOpacity onPress={addTodo}>
-            <View style={styles.addWrapper}>
-              <Text style={styles.icon}>+</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </>
+      <View style={styles.writeTaskWrapper}>
+        <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => newText = text} />
+        <TouchableOpacity onPress={addTodo}>
+          <View style={styles.addWrapper}>
+            <Text style={styles.icon}>+</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -76,7 +92,7 @@ const App = () => {
         data={todos}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        extraData={selectedId}
+        
         ListHeaderComponent={Header}
 
       />
@@ -112,12 +128,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
   },
+  writeTaskWrapper: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
   icon: {
     fontSize: 20,
   },
-  searchBar: {
-    display: 'flex',
-  }
 });
 
 export default App;
