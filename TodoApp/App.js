@@ -16,11 +16,9 @@ const App = () => {
   const [todos, setTodos] = React.useState([]);
   let newText = "";
 
-  const [checkedTodo, setCheckedTodo] = useState();
-
   const renderItem = ({ item }) => {
-    const backgroundColor = item.completed ? '#6e3b6e' : '#f9c2ff';
-    const color = item.completed ? 'white' : 'black';
+    const backgroundColor = item.completed ? 'white' : 'white';
+    const color = item.completed ? '#DADADA' : 'black';
 
     const completeItem = id => {
       console.log(id);
@@ -37,21 +35,21 @@ const App = () => {
       console.log(updatedTodos);
       setTodos(updatedTodos);
     }
-    
+
 
     return (
-      <View>
+      <View style={styles.todo}>
         <Item
           key={item.id}
           item={item}
           onPress={() => completeItem(item.id)}
           backgroundColor={backgroundColor}
           textColor={color}
-          
+          style={styles.listItem}
         />
-        <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
+        <TouchableOpacity onPress={() => handleDeleteTodo(item.id)} style={styles.deleteButton}>
           <View>
-            <Text>Delete</Text>
+            <Text style={styles.deleteText}>delete</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -75,6 +73,8 @@ const App = () => {
 
   const Header = () => {
     return (
+      <>
+      <Text style={styles.heading}>To do list</Text>
       <View style={styles.writeTaskWrapper}>
         <TextInput style={styles.input} placeholder={'Write a Todo...'} onChangeText={text => newText = text} />
         <TouchableOpacity onPress={addTodo}>
@@ -83,6 +83,7 @@ const App = () => {
           </View>
         </TouchableOpacity>
       </View>
+      </>
     )
   }
 
@@ -92,7 +93,7 @@ const App = () => {
         data={todos}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        
+
         ListHeaderComponent={Header}
 
       />
@@ -103,18 +104,19 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    // marginTop: StatusBar.currentHeight || 0,
   },
   item: {
     padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    flex: 1,
+    // marginVertical: 8,
   },
   title: {
     fontSize: 32,
   },
   input: {
     height: 40,
+    flex: 1,
     margin: 12,
     borderWidth: 1,
     padding: 10,
@@ -131,12 +133,33 @@ const styles = StyleSheet.create({
   writeTaskWrapper: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
   },
   icon: {
     fontSize: 20,
   },
+  todo: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    color: 'white',
+  },
+  deleteText: {
+    color: 'white',
+  },
+  heading: {
+    fontSize:40,
+    color: 'black',
+    textAlign:'center',
+    fontWeight: 'bold',
+  }
 });
 
 export default App;
